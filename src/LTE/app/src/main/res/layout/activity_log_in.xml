@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LogInActivity">
+    android:gravity="center"
+    tools:context="com.lte.lte.LogInActivity">
 
-
-    <Button
-        android:id="@+id/btn_temporary"
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="temporary button"/>
+        android:singleLine="true"
+        android:lines="1"
+        android:ems="10"
+        android:id="@+id/etUserID"
+        android:hint="아이디"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="비밀번호"
+        android:ems="10"
+        android:id="@+id/etPassword"
+        android:layout_below="@+id/etUserID"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="33dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원가입"
+        android:id="@+id/btnRegist"
+        android:layout_below="@+id/etPassword"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="26dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="로그인"
+        android:id="@+id/btnLogin"
+        android:layout_alignBottom="@+id/btnRegist"
+        android:layout_toRightOf="@+id/btnRegist"
+        android:layout_toEndOf="@+id/btnRegist" />
 
 </RelativeLayout>

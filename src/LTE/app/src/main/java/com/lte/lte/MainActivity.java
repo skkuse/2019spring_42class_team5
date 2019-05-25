@@ -1,11 +1,15 @@
 package com.lte.lte;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -17,6 +21,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // 로그인 페이지에서 회원 ID 정보 받아 옴
+        Intent intent = new Intent(this.getIntent());
+        String UserID = intent.getStringExtra("UserID");
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
