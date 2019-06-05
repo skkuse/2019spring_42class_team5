@@ -7,46 +7,46 @@
     tools:context="com.lte.lte.LogInActivity">
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:lines="1"
-        android:ems="10"
         android:id="@+id/etUserID"
+        android:layout_width="279dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ems="20"
         android:hint="아이디"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:lines="1"
+        android:singleLine="true" />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="비밀번호"
-        android:ems="10"
         android:id="@+id/etPassword"
+        android:layout_width="279dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/etUserID"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="33dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:ems="20"
+        android:hint="비밀번호"
+        android:inputType="textPassword" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="회원가입"
         android:id="@+id/btnRegist"
+        android:background="@drawable/selector"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:layout_width="134dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/etUserID"
         android:layout_below="@+id/etPassword"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="26dp" />
+        android:text="회원가입" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="로그인"
         android:id="@+id/btnLogin"
-        android:layout_alignBottom="@+id/btnRegist"
-        android:layout_toRightOf="@+id/btnRegist"
-        android:layout_toEndOf="@+id/btnRegist" />
+        android:background="@drawable/selector2"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:layout_width="134dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/etUserID"
+        android:layout_alignTop="@+id/btnRegist"
+        android:text="로그인" />
 
 </RelativeLayout>

@@ -8,6 +8,8 @@
     tools:context="com.lte.lte.SignupPage">
 
     <EditText
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
@@ -17,6 +19,8 @@
         android:id="@+id/etUserName" />
 
     <EditText
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
@@ -26,6 +30,8 @@
         android:id="@+id/etNickname" />
 
     <EditText
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="phone"
@@ -34,6 +40,8 @@
         android:id="@+id/etPhoneNum" />
 
     <EditText
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
@@ -43,6 +51,8 @@
         android:id="@+id/etUserID" />
 
     <EditText
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
@@ -51,6 +61,9 @@
         android:id="@+id/etPassword" />
 
     <EditText
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
@@ -67,6 +80,11 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:background="@drawable/selector2"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:layout_marginLeft="23dp"
+            android:layout_marginRight="5dp"
             android:id="@+id/btnDone"
             android:text="가입"
             android:layout_weight="1"
@@ -74,6 +92,11 @@
             android:layout_height="wrap_content" />
 
         <Button
+            android:background="@drawable/selector"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="23dp"
             android:id="@+id/btnCancel"
             android:text="취소"
             android:layout_weight="1"
