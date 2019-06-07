@@ -12,9 +12,13 @@
         android:roundIcon="@drawable/lte_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="9hzxk2wi12" />
         <activity android:name=".AddModifyPicture"></activity>
         <activity android:name=".PictureList" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".MapFragmentActivity" />
         <activity android:name=".LogInActivity" />
         <activity android:name=".SignupPage" />
         <activity android:name=".SplashActivity">
