@@ -42,7 +42,7 @@ public class MapFragmentActivity extends FragmentActivity implements OnMapReadyC
 
         LatLng coord = new LatLng(37.5670135, 126.9783740);
 
-        Toast.makeText(getApplicationContext(), "À§µµ: " + coord.latitude + ", °æµµ: " + coord.longitude, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "ìœ„ë„: " + coord.latitude + ", ê²½ë„: " + coord.longitude, Toast.LENGTH_SHORT).show();
     }
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
@@ -67,7 +67,7 @@ public class MapFragmentActivity extends FragmentActivity implements OnMapReadyC
 
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
-/*        // GPS¹öÆ° À§Ä¡¼³Á¤
+/*        // Location of Location Button
         View locationButton = ((View) View.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
                 locationButton.getLayoutParams();
@@ -76,37 +76,39 @@ public class MapFragmentActivity extends FragmentActivity implements OnMapReadyC
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
         layoutParams.setMargins(0, 0, 30, 30);
 */
-        // ÇöÀçÀ§Ä¡
+        // Code for Current Location
 
         /*
-        // Å¬¸¯ÇÑ À§Ä¡¿¡ ¸¶Ä¿°¡ »ý¼ºµÇ´Â ÄÚµå
-        // ¡æ Å¸ÀÓ½ºÅÆÇÁ ¹öÆ°°ú ¿¬µ¿ÇØ¼­ ¹öÆ°À» ´©¸£¸é ¸¶Ä¿»ý¼º µÇ´Â ÄÚµå·Î º¯°æÇØ¾ÆÇÔ
+        // Clicking maps makes Markers
+        // It will be used to the timestamp function
         naverMap.setOnMapClickListener((point, coord) -> {
             Marker marker = new Marker();
             marker.setPosition(new LatLng(coord.latitude, coord.longitude));
             marker.setIcon(MarkerIcons.BLACK);
             // Default: GRAY
-            // º°Á¡¿¡µû¶ó »ö»óÀÌ ¹Ù²î°Ô ÇØ¾ßÇÔ
+            // It will change its color with its star rank
             marker.setIconTintColor(Color.GRAY);
             marker.setMap(naverMap);
         });
         */
 
-        // °æ·Î
-        // ¿¹½Ã Å¬¸¯À§Ä¡¿¡ °æ·Î±×¸®±â ¡æ GPS ¿¬µ¿¿¡µû¶ó °æ·Î±×¸®±â·Î ¹Ù²Ü¿¹Á¤
+        // Route
+        // It will be used to the GPS route
         PathOverlay path = new PathOverlay();
-        path.setOutlineWidth(0);
-        path.setColor(Color.rgb(255, 160, 0));
         List<LatLng> coords = new ArrayList<>();
         Collections.addAll(coords,
                 new LatLng(37.57152, 126.97714),
                 new LatLng(37.56607, 126.98268)
         );
         path.setCoords(coords);
+        path.setOutlineWidth(0);
+        path.setColor(Color.rgb(255, 160, 0));
         path.setMap(naverMap);
         naverMap.setOnMapClickListener((point, coord) -> {
             addRoute(coords, coord.latitude, coord.longitude);
             path.setCoords(coords);
+            path.setOutlineWidth(0);
+            path.setColor(Color.rgb(255, 160, 0));
             path.setMap(naverMap);
         });
     }
