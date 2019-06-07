@@ -2,6 +2,7 @@ package com.lte.lte;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,14 +23,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-
         tedPermission();
-
-
-
-
     }
-
 
     private void tedPermission(){
         PermissionListener permissionListener = new PermissionListener() {
@@ -63,5 +58,7 @@ public class SplashActivity extends AppCompatActivity {
                 .check();
 
     }
+
+
 
 }

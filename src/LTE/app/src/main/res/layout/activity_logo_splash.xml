@@ -4,6 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splash_window"
     tools:context=".SplashActivity">
+
+    <ImageView
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:src="@drawable/lte_logo"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        />
 
 </RelativeLayout>
