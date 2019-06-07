@@ -18,7 +18,6 @@
         <activity android:name=".AddModifyPicture"></activity>
         <activity android:name=".PictureList" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".MapFragmentActivity" />
         <activity android:name=".LogInActivity" />
         <activity android:name=".SignupPage" />
         <activity android:name=".SplashActivity">

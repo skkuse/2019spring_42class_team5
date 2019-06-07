@@ -7,13 +7,12 @@
     tools:context=".MainActivity">
 
     <!--지도는 여기에-->
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:navermap_locationButtonEnabled="true"
-        android:name="com.naver.maps.map.MapFragment"
-        />
+        android:name="com.naver.maps.map.MapFragment" />
 
     <Button
         android:id="@+id/btn_AddPicture"
