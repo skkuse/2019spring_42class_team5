@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Animation fab_open, fab_close;
     private Boolean isFabOpen = false;
+    private Button btn_picture, btn_timestamp;
     private FloatingActionButton fab, fab1, fab2;
 
     @Override
@@ -41,11 +42,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
 
+        btn_picture = (Button) findViewById(R.id.btn_AddPicture);
+        btn_timestamp = (Button) findViewById(R.id.btn_TimeStamp)
         fab= (FloatingActionButton)findViewById(R.id.fab_HashTags);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1); //리스트
         fab2 = (FloatingActionButton) findViewById(R.id.fab2); //임시
 
 
+        btn_picture.setOnClickListener(this);
+        btn_timestamp.setOnClickListener(this);
         fab.setOnClickListener(this);
         fab1.setOnClickListener(this);
         fab2.setOnClickListener(this);
@@ -139,6 +144,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_AddPicture:
+                Intent intent = new Intent(this, AddModifyPicture.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_TimeStamp:
+                break;
             case R.id.fab_HashTags:
                 anim();
                 break;
