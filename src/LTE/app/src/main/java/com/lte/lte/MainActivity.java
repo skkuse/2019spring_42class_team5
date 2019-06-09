@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
 
         btn_picture = (Button) findViewById(R.id.btn_AddPicture);
-        btn_timestamp = (Button) findViewById(R.id.btn_TimeStamp)
+        btn_timestamp = (Button) findViewById(R.id.btn_TimeStamp);
         fab= (FloatingActionButton)findViewById(R.id.fab_HashTags);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1); //리스트
         fab2 = (FloatingActionButton) findViewById(R.id.fab2); //임시

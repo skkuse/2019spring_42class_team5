@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -19,7 +19,6 @@
             android:value="9hzxk2wi12" />
 
         <activity android:name=".AddModifyPicture" />
-        <activity android:name=".PictureList" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LogInActivity" />
         <activity android:name=".SignupPage" />
