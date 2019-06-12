@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
@@ -23,6 +24,8 @@ import com.naver.maps.map.util.FusedLocationSource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
@@ -30,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Boolean isFabOpen = false;
     private Button btn_picture, btn_timestamp;
     private FloatingActionButton fab, fab1, fab2;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private FusedLocationSource locationSource;
+    private Boolean locationChecking = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab1 = (FloatingActionButton) findViewById(R.id.fab1); //리스트
         fab2 = (FloatingActionButton) findViewById(R.id.fab2); //임시
 
-
         btn_picture.setOnClickListener(this);
         btn_timestamp.setOnClickListener(this);
         fab.setOnClickListener(this);
@@ -66,15 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mapFragment.getMapAsync(this);
 
-        LatLng coord = new LatLng(37.5670135, 126.9783740);
-
-        Toast.makeText(getApplicationContext(), "위도: " + coord.latitude + ", 경도: " + coord.longitude, Toast.LENGTH_SHORT).show();
-
     }
-
-
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
-    private FusedLocationSource locationSource;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -87,14 +84,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @UiThread
 
-    private void addRoute(List<LatLng> L, double x, double y){
-        LatLng Add = new LatLng(x, y);
-        L.add(Add);
-    }
-
-
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
+
+        naverMap.setLocationSource(locationSource);
+        naverMap.getUiSettings().setLocationButtonEnabled(true);
+        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+
 /*        // Location of Location Button
         View locationButton = ((View) View.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
@@ -122,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Route
         // It will be used to the GPS route
+/*      sample route
         PathOverlay path = new PathOverlay();
         List<LatLng> coords = new ArrayList<>();
         Collections.addAll(coords,
@@ -132,15 +129,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         path.setOutlineWidth(0);
         path.setColor(Color.rgb(255, 160, 0));
         path.setMap(naverMap);
-        naverMap.setOnMapClickListener((point, coord) -> {
-            addRoute(coords, coord.latitude, coord.longitude);
-            path.setCoords(coords);
-            path.setOutlineWidth(0);
-            path.setColor(Color.rgb(255, 160, 0));
-            path.setMap(naverMap);
-        });
-    }
+        */
+//   naverMap.setOnMapClickListener((point, coord) -> {
 
+        recordRoute(naverMap);
+        /*
+        TimerTask second = new TimerTask(){
+           public void run(){
+               recordRoute(naverMap);
+           }
+        };
+
+        Timer timer = new Timer();
+        long delay = 0;
+        long intervalPeriod = 1000;
+
+        while (locationChecking) {
+            timer.scheduleAtFixedRate(second, delay, intervalPeriod);
+        }*/
+    }
 
     @Override
     public void onClick(View v) {
@@ -156,6 +163,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.fab1:
                 anim();
+                if(locationChecking)
+                    locationChecking = false;
+                else
+                    locationChecking = true;
                 break;
             case R.id.fab2:
                 anim();
@@ -163,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
 
     public void anim() {
 
@@ -182,4 +192,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+        public void recordRoute(@NonNull NaverMap naverMap){
+            PathOverlay path = new PathOverlay();
+            List<LatLng> coords = new ArrayList<>();
+            naverMap.addOnLocationChangeListener(location -> {
+                Collections.addAll(coords,
+                        new LatLng(location.getLatitude(), location.getLongitude()),
+                        new LatLng(location.getLatitude(), location.getLongitude())
+                );
+                LatLng Add = new LatLng(location.getLatitude(),location.getLongitude());
+                coords.add(Add);
+                path.setCoords(coords);
+                path.setOutlineWidth(0);
+                path.setColor(Color.rgb(255, 160, 0));
+                path.setMap(naverMap);
+            });
+        }
 }
