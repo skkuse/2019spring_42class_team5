@@ -36,6 +36,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
     private Boolean locationChecking = false;
+    private NaverMap naverMapObj;
+    private MapView NmapView;
+    private double x;
+    private double y;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             getSupportFragmentManager().beginTransaction().add(R.id.map, mapFragment).commit();
         }
 
+        NmapView = mapFragment.getMapView();
         mapFragment.getMapAsync(this);
 
     }
@@ -88,9 +93,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onMapReady(@NonNull NaverMap naverMap) {
 
         naverMap.setLocationSource(locationSource);
-        naverMap.getUiSettings().setLocationButtonEnabled(true);
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
+        naverMapObj = naverMap;
+        
 /*        // Location of Location Button
         View locationButton = ((View) View.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
@@ -100,53 +106,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
         layoutParams.setMargins(0, 0, 30, 30);
 */
-        // Code for Current Location
-
-        /*
-        // Clicking maps makes Markers
-        // It will be used to the timestamp function
-        naverMap.setOnMapClickListener((point, coord) -> {
-            Marker marker = new Marker();
-            marker.setPosition(new LatLng(coord.latitude, coord.longitude));
-            marker.setIcon(MarkerIcons.BLACK);
-            // Default: GRAY
-            // It will change its color with its star rank
-            marker.setIconTintColor(Color.GRAY);
-            marker.setMap(naverMap);
-        });
-        */
-
-        // Route
-        // It will be used to the GPS route
-/*      sample route
-        PathOverlay path = new PathOverlay();
-        List<LatLng> coords = new ArrayList<>();
-        Collections.addAll(coords,
-                new LatLng(37.57152, 126.97714),
-                new LatLng(37.56607, 126.98268)
-        );
-        path.setCoords(coords);
-        path.setOutlineWidth(0);
-        path.setColor(Color.rgb(255, 160, 0));
-        path.setMap(naverMap);
-        */
-//   naverMap.setOnMapClickListener((point, coord) -> {
 
         recordRoute(naverMap);
-        /*
-        TimerTask second = new TimerTask(){
-           public void run(){
-               recordRoute(naverMap);
-           }
-        };
 
-        Timer timer = new Timer();
-        long delay = 0;
-        long intervalPeriod = 1000;
-
-        while (locationChecking) {
-            timer.scheduleAtFixedRate(second, delay, intervalPeriod);
-        }*/
     }
 
     @Override
@@ -157,7 +119,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btn_TimeStamp:
-                break;
+                Marker marker = new Marker();
+                LatLng current = new LatLng(x,y);
+                naverMapObj.addOnLocationChangeListener(location ->
+                        {
+                            x = location.getLatitude();
+                            y = location.getLongitude();
+                        });
+                naverMapObj.removeOnLocationChangeListener(location -> {
+                });
+                    marker.setPosition(current);
+                    marker.setIcon(MarkerIcons.BLACK);
+                    // Default: GRAY
+                    marker.setIconTintColor(Color.GRAY);
+                    marker.setMap(naverMapObj);
             case R.id.fab_HashTags:
                 anim();
                 break;
