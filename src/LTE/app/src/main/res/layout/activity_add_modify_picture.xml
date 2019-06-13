@@ -36,19 +36,32 @@
             android:id="@+id/image_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
+        <Button
+            android:id="@+id/btn_done_add_modify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="30dp"
+            android:textColor="@color/white"
+            android:background="@drawable/round_button_coral"
+            android:text="Done" />
 
         <Button
             android:id="@+id/btn_delete_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:paddingEnd="20dp"
             android:text="삭제"
-            android:paddingEnd="20dp"/>
+            android:background="@drawable/round_button_blue"
+            android:visibility="invisible" />
+
         <GridView
             android:id="@+id/gv_selected_img"
             android:layout_width="match_parent"
@@ -62,20 +75,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/gv_selected_img"
+            android:gravity="center_vertical"
+
             android:layout_marginTop="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:text="별점" />
+                android:text="별점"
+                android:textSize="20sp"/>
 
             <RatingBar
                 android:id="@+id/rb_starpoint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:theme="@style/RatingBar"
                 android:numStars="5"
-                android:stepSize="0.5" />
+                android:stepSize="0.5"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:layout_marginStart="-15dp"/>
 
         </LinearLayout>
 
@@ -91,22 +110,19 @@
             android:id="@+id/et_picture_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/edttext_border"
             android:layout_below="@id/tg_hashtags"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:hint="Write a comment"
+            android:hint="코멘트를 남겨주세요"
             android:inputType="textMultiLine"
+
             android:lines="5"
             android:scrollbars="vertical" />
 
-        <Button
-            android:id="@+id/btn_done_add_modify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30dp"
-            android:text="Done" />
+
     </RelativeLayout>
+
+
 
 </RelativeLayout>

@@ -1,21 +1,27 @@
 package com.lte.lte;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,10 +40,22 @@ import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
+import com.naver.maps.geometry.LatLng;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -61,10 +79,16 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
     private static final int GALLERY_IMAGE_REQUEST = 1;
     private static final int MAX_DIMENSION = 1200;
 
+    private static final int LOCATION_REQUEST = 2;
+
     private static final int NUM_LABELS = 5;
 
     private static int numDone = 0;
     private static int numImages = 0;
+
+    private static float starpoint;
+    private static String comment;
+    private static String[] tags;
 
     private TextView mImageDetails;
     private ImageView mZoomImage;
@@ -75,17 +99,39 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
     GridView grSelected;
     private static SelectedImgAdapter adapter;
 
+
     private static TagGroup tgHashtags;
 
     private static Button btnDone;
     private static Button btnDelete;
 
-    private ArrayList<Bitmap> originalBitmaps;
+    private static RatingBar rbStarpoint;
+    private static EditText etComment;
+
+    private static ArrayList<bitmaps> originalBitmaps;
 
     private static String labels;
     private static String[] topLabels;
 
     private static Boolean isModifying = false;
+
+    class bitmaps {
+        private Bitmap originalBitmap;
+        private File file;
+
+        public bitmaps(Bitmap b, Uri uri) throws URISyntaxException {
+            this.originalBitmap = b;
+            this.file = new File(getRealPathFromURI(uri));
+        }
+
+        public Bitmap getBitmap() {
+            return this.originalBitmap;
+        }
+
+        public File getFile() {
+            return this.file;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,10 +149,14 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         btnDone = findViewById(R.id.btn_done_add_modify);
         btnDelete = findViewById(R.id.btn_delete_picture);
 
+        rbStarpoint = findViewById(R.id.rb_starpoint);
+        etComment = findViewById(R.id.et_picture_comment);
+
         rlZoom = findViewById(R.id.rl_zoom_picture);
         rlSelectedList = findViewById(R.id.rl_selected_list);
 
         tgHashtags = (TagGroup) findViewById(R.id.tg_hashtags);
+
 
         labels = "";
         numDone = 0;
@@ -114,7 +164,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
 
         grSelected.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             if (!isModifying) {
-                mZoomImage.setImageBitmap(originalBitmaps.get(position));
+                mZoomImage.setImageBitmap(originalBitmaps.get(position).getBitmap());
 
                 rlZoom.setVisibility(View.VISIBLE);
                 rlSelectedList.setVisibility(View.GONE);
@@ -135,8 +185,6 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         rlZoom.setOnClickListener(this);
         btnDone.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
-
-
     }
 
     @Override
@@ -162,6 +210,25 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
                 break;
 
             case R.id.btn_done_add_modify:
+
+                starpoint = rbStarpoint.getRating();
+                comment = etComment.getText().toString();
+                tags = tgHashtags.getTags();
+
+                try {
+                    LatLng final_coords = getLocation();
+                    if (final_coords == null) {
+                        Intent intent = new Intent(getApplicationContext(),ManualMarkerActiviry.class);
+                        startActivityForResult(intent, LOCATION_REQUEST);
+                    } else {
+                        insertToDatabase("kjhbabo", originalBitmaps, starpoint, tags, comment, getTime(), final_coords.latitude, final_coords.longitude);
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -195,17 +262,19 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
 
             for (int i = 0; i < numImages; i++) {
                 try {
-                    originalBitmaps.add(MediaStore.Images.Media.getBitmap(getContentResolver(), uri[i]));
+                    originalBitmaps.add(new bitmaps(MediaStore.Images.Media.getBitmap(getContentResolver(), uri[i]), uri[i]));
                     // scale the image to save on bandwidth
                     thumbBitmaps.add(
                             scaleBitmapDown(
-                                    originalBitmaps.get(i)
+                                    originalBitmaps.get(i).getBitmap()
                             ));
 
 
                 } catch (IOException e) {
                     Log.d(TAG, "Image picking failed because " + e.getMessage());
                     Toast.makeText(this, R.string.image_picker_error, Toast.LENGTH_LONG).show();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -214,6 +283,15 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
 
             for (int i = 0; i < numImages; i++) {
                 callCloudVision(thumbBitmaps.get(i));
+            }
+
+        } else if (requestCode == LOCATION_REQUEST && resultCode == RESULT_OK) {
+            try {
+                insertToDatabase("kjhbabo", originalBitmaps, starpoint, tags, comment, getTime(), data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
 
         }
@@ -422,5 +500,151 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
 
     }
 
+    private static LatLng getLocation() throws IOException {
+        String lat = ExifInterface.TAG_GPS_LATITUDE;
+        String lot = ExifInterface.TAG_GPS_LONGITUDE;
+        String lat_data = "";
+        String lot_data = "";
+        double[] latitude = new double[3];
+        double[] longtitude = new double[3];
+        for (int i = 0; i < originalBitmaps.size(); i++) {
+            ExifInterface exif = new ExifInterface(originalBitmaps.get(i).getFile().getAbsolutePath());
+            lat_data = exif.getAttribute(lat);
+            lot_data = exif.getAttribute(lot);
+            if (lat_data != null && lot_data != null) {
+                for (int j = 0; j < 3; j++) {
+                    latitude[i] = Double.parseDouble(lat_data.split(",")[i].split("/")[0]) / Double.parseDouble(lat_data.split(",")[i].split("/")[1]);
+                    longtitude[i] = Double.parseDouble(lot_data.split(",")[i].split("/")[0]) / Double.parseDouble(lot_data.split(",")[i].split("/")[1]);
+                }
+                return new LatLng(latitude[0] + (latitude[1] * 60 + latitude[2]) / 3600, longtitude[0] + (longtitude[1] * 60 + longtitude[2]) / 3600);
+            }
+        }
+        return null;
+    }
+
+    private static String getTime() throws IOException, ParseException {
+        String dat = ExifInterface.TAG_DATETIME;
+        String datetime = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss");
+        SimpleDateFormat convert = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+
+
+        for (int i = 0; i < originalBitmaps.size(); i++) {
+            ExifInterface exif = new ExifInterface(originalBitmaps.get(i).getFile().getAbsolutePath());
+            datetime = exif.getAttribute(dat);
+            if (datetime!=null&&datetime.length() != 0) {
+                convert.format(format.parse(datetime));
+                return datetime;
+            }
+        }
+
+        return "";
+
+    }
+
+
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
+    }
+
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);    //bitmap compress
+        byte[] arr = baos.toByteArray();
+        return Base64.encodeToString(arr, Base64.DEFAULT);
+    }
+
+    private void insertToDatabase(String UserID, ArrayList<bitmaps> bitmap, float starpoint, String[] Hashtags, String Comment, String date, double lat, double lot) throws UnsupportedEncodingException {
+        class InsertData extends AsyncTask<String, Void, String> {
+            ProgressDialog loading;//private added
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(AddModifyPicture.this, "Please Wait", null, true, true);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                try {
+
+
+                    String link = "http://115.145.226.214//image.php";
+
+
+                    URL url = new URL(link);
+                    URLConnection conn = url.openConnection();
+
+                    conn.setDoOutput(true);
+                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+                    wr.write(params[0]);
+                    wr.flush();
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+
+                    // Read Server Response
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
+                    return sb.toString();
+                } catch (Exception e) {
+                    return "Exception: " + e.getMessage();
+                }
+            }
+        }
+
+        String[] images = new String[bitmap.size()];
+
+        for (int i = 0; i < images.length; i++) {
+            images[i] = BitMapToString(bitmap.get(i).getBitmap());
+        }
+
+        String data = URLEncoder.encode("UserID", "UTF-8") + "=" + URLEncoder.encode(UserID, "UTF-8");
+        data += "&" + URLEncoder.encode("Create_time", "UTF-8") + "=" + URLEncoder.encode(date, "UTF-8");
+        data += "&" + URLEncoder.encode("x_coordinate", "UTF-8") + "=" + URLEncoder.encode(Double.toString(lot), "UTF-8");
+        data += "&" + URLEncoder.encode("y_coordinate", "UTF-8") + "=" + URLEncoder.encode(Double.toString(lat), "UTF-8");
+        data += "&" + URLEncoder.encode("hashtag", "UTF-8") + "=";
+        for (int i = 0; i < Hashtags.length; i++) {
+            if (i == 0)
+                data += URLEncoder.encode(Hashtags[i], "UTF-8");
+            else
+                data += "+" + URLEncoder.encode(Hashtags[i], "UTF-8");
+        }
+        data += "&" + URLEncoder.encode("starpoint", "UTF-8") + "=" + URLEncoder.encode(Float.toString(starpoint), "UTF-8");
+        data += "&" + URLEncoder.encode("text", "UTF-8") + "=" + URLEncoder.encode(Comment, "UTF-8");
+        data += "&" + URLEncoder.encode("image", "UTF-8") + "=";
+        for (int i = 0; i < images.length; i++) {
+            if (i == 0)
+                data += URLEncoder.encode(images[i], "UTF-8");
+            else
+                data += "+" + URLEncoder.encode(images[i], "UTF-8");
+
+        }
+
+        InsertData task = new InsertData();
+        task.execute(data);
+    }
 }
 

@@ -80,7 +80,7 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:background="@drawable/selector2"
+            android:background="@drawable/round_button_coral"
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:layout_marginLeft="23dp"
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:background="@drawable/selector"
+            android:background="@drawable/round_button_blue"
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:layout_marginLeft="5dp"

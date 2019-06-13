@@ -5,34 +5,31 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionMenu;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
+import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.PathOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
+import com.naver.maps.map.util.MarkerIcons;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
-    private Animation fab_open, fab_close;
-    private Boolean isFabOpen = false;
-    private Button btn_picture, btn_timestamp;
-    private FloatingActionButton fab, fab1, fab2;
+    private FloatingActionMenu fam;
+    private com.github.clans.fab.FloatingActionButton fab1,fab2,fab3;
+    private Button btn_picture;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
     private Boolean locationChecking = false;
@@ -50,20 +47,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(this.getIntent());
         String UserID = intent.getStringExtra("UserID");
 
-        fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
 
         btn_picture = (Button) findViewById(R.id.btn_AddPicture);
-        btn_timestamp = (Button) findViewById(R.id.btn_TimeStamp);
-        fab= (FloatingActionButton)findViewById(R.id.fab_HashTags);
-        fab1 = (FloatingActionButton) findViewById(R.id.fab1); //리스트
-        fab2 = (FloatingActionButton) findViewById(R.id.fab2); //임시
+
+        fam =findViewById(R.id.fam);
+        fab1 =  findViewById(R.id.fab1); //경로 저장
+        fab2 =  findViewById(R.id.fab2); //타임스탬프
+        fab3 = findViewById(R.id.fab3);  //로그아웃
 
         btn_picture.setOnClickListener(this);
-        btn_timestamp.setOnClickListener(this);
-        fab.setOnClickListener(this);
+        fam.setOnClickListener(this);
         fab1.setOnClickListener(this);
         fab2.setOnClickListener(this);
+        fab3.setOnClickListener(this);
+
+        fab1.setLabelText("경로 저장");
 
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
         naverMapObj = naverMap;
-        
+
 /*        // Location of Location Button
         View locationButton = ((View) View.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
@@ -118,70 +116,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this, AddModifyPicture.class);
                 startActivity(intent);
                 break;
-            case R.id.btn_TimeStamp:
+            case R.id.fab3:
                 Marker marker = new Marker();
                 LatLng current = new LatLng(x,y);
                 naverMapObj.addOnLocationChangeListener(location ->
-                        {
-                            x = location.getLatitude();
-                            y = location.getLongitude();
-                        });
+                {
+                    x = location.getLatitude();
+                    y = location.getLongitude();
+                });
                 naverMapObj.removeOnLocationChangeListener(location -> {
                 });
-                    marker.setPosition(current);
-                    marker.setIcon(MarkerIcons.BLACK);
-                    // Default: GRAY
-                    marker.setIconTintColor(Color.GRAY);
-                    marker.setMap(naverMapObj);
-                break;
-            case R.id.fab_HashTags:
-                anim();
+                marker.setPosition(current);
+                marker.setIcon(MarkerIcons.BLACK);
+                // Default: GRAY
+                marker.setIconTintColor(Color.GRAY);
+                marker.setMap(naverMapObj);
                 break;
             case R.id.fab1:
-                anim();
-                if(locationChecking)
+                if(locationChecking) {
                     locationChecking = false;
-                else
+                    fab1.setLabelText("경로 저장 중지");
+                }
+                else {
                     locationChecking = true;
+                    fab1.setLabelText("경로 저장");
+                }
                 break;
             case R.id.fab2:
-                anim();
                 break;
         }
 
     }
 
-    public void anim() {
 
-        if (isFabOpen) {
-            fab1.startAnimation(fab_close);
-            fab2.startAnimation(fab_close);
-            fab1.setClickable(false);
-            fab2.setClickable(false);
-            isFabOpen = false;
-        } else {
-            fab1.startAnimation(fab_open);
-            fab2.startAnimation(fab_open);
-            fab1.setClickable(true);
-            fab2.setClickable(true);
-            isFabOpen = true;
-        }
+    public void recordRoute(@NonNull NaverMap naverMap){
+        PathOverlay path = new PathOverlay();
+        List<LatLng> coords = new ArrayList<>();
+        naverMap.addOnLocationChangeListener(location -> {
+            Collections.addAll(coords,
+                    new LatLng(location.getLatitude(), location.getLongitude()),
+                    new LatLng(location.getLatitude(), location.getLongitude())
+            );
+            LatLng Add = new LatLng(location.getLatitude(),location.getLongitude());
+            coords.add(Add);
+            path.setCoords(coords);
+            path.setOutlineWidth(0);
+            path.setColor(Color.rgb(255, 160, 0));
+            path.setMap(naverMap);
+        });
     }
-
-        public void recordRoute(@NonNull NaverMap naverMap){
-            PathOverlay path = new PathOverlay();
-            List<LatLng> coords = new ArrayList<>();
-            naverMap.addOnLocationChangeListener(location -> {
-                Collections.addAll(coords,
-                        new LatLng(location.getLatitude(), location.getLongitude()),
-                        new LatLng(location.getLatitude(), location.getLongitude())
-                );
-                LatLng Add = new LatLng(location.getLatitude(),location.getLongitude());
-                coords.add(Add);
-                path.setCoords(coords);
-                path.setOutlineWidth(0);
-                path.setColor(Color.rgb(255, 160, 0));
-                path.setMap(naverMap);
-            });
-        }
 }
