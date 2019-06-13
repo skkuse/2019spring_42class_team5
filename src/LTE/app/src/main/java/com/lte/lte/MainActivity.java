@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     // Default: GRAY
                     marker.setIconTintColor(Color.GRAY);
                     marker.setMap(naverMapObj);
+                break;
             case R.id.fab_HashTags:
                 anim();
                 break;
