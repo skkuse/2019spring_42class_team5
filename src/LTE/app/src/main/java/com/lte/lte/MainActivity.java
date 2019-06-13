@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this, AddModifyPicture.class);
                 startActivity(intent);
                 break;
-            case R.id.fab3:
+            case R.id.fab2: // 타임스탬프
                 Marker marker = new Marker();
                 LatLng current = new LatLng(x,y);
                 naverMapObj.addOnLocationChangeListener(location ->
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 marker.setIconTintColor(Color.GRAY);
                 marker.setMap(naverMapObj);
                 break;
-            case R.id.fab1:
+            case R.id.fab1: // 경로 저장 버튼
                 if(locationChecking) {
                     locationChecking = false;
                     fab1.setLabelText("경로 저장 중지");
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     fab1.setLabelText("경로 저장");
                 }
                 break;
-            case R.id.fab2:
+            case R.id.fab3: // 로그아웃
                 break;
         }
 
