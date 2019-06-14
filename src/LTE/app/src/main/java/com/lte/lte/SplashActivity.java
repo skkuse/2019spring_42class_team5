@@ -2,26 +2,25 @@ package com.lte.lte;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.security.auth.login.LoginException;
 
 public class SplashActivity extends AppCompatActivity {
     public static final int ACTIVITY_RESULT_LOGIN = 2;
+    private SharedManagerUtil mSpUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        mSpUtil = SharedManagerUtil.getInstance(SplashActivity.this);
+        mSpUtil.setServerIP("115.145.226.139");
 
         tedPermission();
     }

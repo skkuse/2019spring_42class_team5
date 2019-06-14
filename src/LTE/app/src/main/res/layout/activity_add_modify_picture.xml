@@ -36,7 +36,6 @@
             android:id="@+id/image_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
 
@@ -59,6 +58,18 @@
             android:layout_alignParentEnd="true"
             android:paddingEnd="20dp"
             android:text="삭제"
+            android:background="@drawable/round_button_blue"
+            android:visibility="invisible" />
+
+
+        <Button
+            android:id="@+id/btn_edit_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:paddingEnd="20dp"
+            android:text="수정"
             android:background="@drawable/round_button_blue"
             android:visibility="invisible" />
 
@@ -104,6 +115,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_starpoint"
             app:atg_isAppendMode="true" />
+
+        <me.gujun.android.taggroup.TagGroup
+            android:id="@+id/tg_hashtags_uneditable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_starpoint"
+            app:atg_isAppendMode="false"
+            android:visibility="gone"/>
 
 
         <EditText

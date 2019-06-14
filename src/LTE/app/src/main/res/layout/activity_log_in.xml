@@ -29,24 +29,32 @@
 
     <Button
         android:id="@+id/btnRegist"
-        android:background="@drawable/round_button_blue"
-        android:textColor="#ffffff"
-        android:textStyle="bold"
         android:layout_width="134dp"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/etUserID"
         android:layout_below="@+id/etPassword"
-        android:text="회원가입" />
+        android:layout_alignStart="@+id/etUserID"
+        android:background="@drawable/round_button_blue"
+        android:text="회원가입"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnLogin"
-        android:background="@drawable/round_button_coral"
-        android:textColor="#ffffff"
-        android:textStyle="bold"
         android:layout_width="134dp"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/etUserID"
         android:layout_alignTop="@+id/btnRegist"
-        android:text="로그인" />
+        android:layout_alignEnd="@+id/etUserID"
+        android:background="@drawable/round_button_coral"
+        android:text="로그인"
+        android:textColor="#ffffff"
+        android:textStyle="bold" />
 
+    <CheckBox
+        android:id="@+id/cbAutoLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp"
+        android:text="자동 로그인" />
 </RelativeLayout>

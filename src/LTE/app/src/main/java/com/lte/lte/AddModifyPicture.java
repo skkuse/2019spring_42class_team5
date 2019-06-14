@@ -158,6 +158,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         tgHashtags = (TagGroup) findViewById(R.id.tg_hashtags);
 
 
+
         labels = "";
         numDone = 0;
         topLabels = new String[NUM_LABELS];
