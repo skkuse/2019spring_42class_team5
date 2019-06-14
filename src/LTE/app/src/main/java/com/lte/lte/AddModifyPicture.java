@@ -68,6 +68,8 @@ import me.gujun.android.taggroup.TagGroup;
 //Uploading and modifying Pictures
 
 public class AddModifyPicture extends AppCompatActivity implements View.OnClickListener {
+    private SharedManagerUtil mSpUtil;
+
     private static final String CLOUD_VISION_API_KEY = BuildConfig.API_KEY;
     public static final String FILE_NAME = "temp.jpg";
     private static final String ANDROID_CERT_HEADER = "X-Android-Cert";
@@ -138,6 +140,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_modify_picture);
 
+        mSpUtil = SharedManagerUtil.getInstance(AddModifyPicture.this);
 
         grSelected = (GridView) findViewById(R.id.gv_selected_img);
 
@@ -588,7 +591,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
                 try {
 
 
-                    String link = "http://115.145.226.214//image.php";
+                    String link = "http://"+mSpUtil.getServeriP()+"//image.php";
 
 
                     URL url = new URL(link);
