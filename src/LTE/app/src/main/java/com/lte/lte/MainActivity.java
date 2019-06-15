@@ -3,11 +3,13 @@ package com.lte.lte;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Picture;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.UiThread;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -23,6 +25,10 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.PathOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.util.MarkerIcons;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -55,8 +61,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static NaverMap.OnLocationChangeListener listner;
     private static List<LatLng> coords;
+    private static String route_create_time, route_end_time;
+
 
     private static PathOverlay path;
+
+    // DB 데이터 JSON 불러와서 자르기 test
+    private String pictureJsonString;
+    private String routeJsonString;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 로그인 페이지에서 회원 ID 정보 받아 옴
         Intent intent = new Intent(this.getIntent());
         String UserID = intent.getStringExtra("UserID");
-
 
         btn_picture = (Button) findViewById(R.id.btn_AddPicture);
 
@@ -97,6 +109,261 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NmapView = mapFragment.getMapView();
         mapFragment.getMapAsync(this);
 
+        // JSON parsing 테스트해 보기 위한 임의의 string
+        pictureJsonString = "{\"Picture\" : [{" +
+                "\"user_id\" : \"test\"," +
+                "\"image_path\" : \"https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png\"," +
+                "\"create_time\" : \"2019-06-15 08:28\"," +
+                "\"x_coordinate\" : \"37.566535\"," +
+                "\"y_coordinate\" : \"126.977969\"," +
+                "\"hashtag\" : \"kitties\"," +
+                "\"starpoint\" : \"4\"," +
+                "\"text\" : \"여기 좋았다\"" +
+                "}," +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"image_path\" : \"https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png\"," +
+                "\"create_time\" : \"2019-06-17 08:28\"," +
+                "\"x_coordinate\" : \"37.5789\"," +
+                "\"y_coordinate\" : \"126.9765\"," +
+                "\"hashtag\" : \"happy\"," +
+                "\"starpoint\" : \"5\"," +
+                "\"text\" : \"굿굿\"" +
+                "}," +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"image_path\" : \"https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png\"," +
+                "\"create_time\" : \"2019-06-14 08:28\"," +
+                "\"x_coordinate\" : \"37.56999\"," +
+                "\"y_coordinate\" : \"126.977999\"," +
+                "\"hashtag\" : \"ramen\"," +
+                "\"starpoint\" : \"3\"," +
+                "\"text\" : \"보통\"" +
+                "}," +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"image_path\" : null," +
+                "\"create_time\" : \"2019-06-14 08:28\"," +
+                "\"x_coordinate\" : \"37.56809\"," +
+                "\"y_coordinate\" : \"126.977809\"," +
+                "\"hashtag\" : null," +
+                "\"starpoint\" : null," +
+                "\"text\" : null" +
+                "}," +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"image_path\" : \"https://www.google.co.kr/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png\"," +
+                "\"create_time\" : \"2019-06-12 08:28\"," +
+                "\"x_coordinate\" : \"37.55444\"," +
+                "\"y_coordinate\" : \"126.96789\"," +
+                "\"hashtag\" : \"happy\"," +
+                "\"starpoint\" : \"2\"," +
+                "\"text\" : \"그저 그랬음\"" +
+                "}" +
+                "" +
+                "]" +
+                "}";
+
+        routeJsonString = "{" +
+                "\"Route\" : [" +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"create_time\" : \"2019-06-15 08:28\"," +
+                "\"end_time\" : \"2019-06-15 09:28\"," +
+                "\"route_info\" : { \"x\" : \"37.566535\", \"y\" : \"126.977969\"}," +
+                "\"route_order\" : \"0\"," +
+                "\"route_id\" : \"1\"" +
+                "}," +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"create_time\" : \"2019-06-15 08:28\"," +
+                "\"end_time\" : \"2019-06-15 09:28\"," +
+                "\"route_info\" : { \"x\" : \"37.5666\", \"y\" : \"126.978\"}," +
+                "\"route_order\" : \"1\"," +
+                "\"route_id\" : \"1\"" +
+                "}," +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"create_time\" : \"2019-06-15 08:28\"," +
+                "\"end_time\" : \"2019-06-15 09:28\"," +
+                "\"route_info\" : {\"x\" : \"37.566\", \"y\" : \"126.979\"}," +
+                "\"route_order\" : \"2\"," +
+                "\"route_id\" : \"1\"" +
+                "}," +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"create_time\" : \"2019-06-15 08:41\"," +
+                "\"end_time\" : \"2019-06-15 09:28\"," +
+                "\"route_info\" : {\"x\" : \"37.56\", \"y\" : \"126.97\"}," +
+                "\"route_order\" : \"0\"," +
+                "\"route_id\" : \"2\"" +
+                "}," +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"create_time\" : \"2019-06-15 08:41\"," +
+                "\"end_time\" : \"2019-06-15 09:28\"," +
+                "\"route_info\" : { \"x\" : \"37.55\", \"y\" : \"126.97\"}," +
+                "\"route_order\" : \"1\"," +
+                "\"route_id\" : \"2\"" +
+                "}," +
+                "{" +
+                "\"user_id\" : \"test\"," +
+                "\"create_time\" : \"2019-06-15 08:41\"," +
+                "\"end_time\" : \"2019-06-15 09:28\"," +
+                "\"route_info\" : { \"x\" : \"37.54\", \"y\" : \"126.9\"}," +
+                "\"route_order\" : \"2\"," +
+                "\"route_id\" : \"2\"" +
+                "}" +
+                "]" +
+                "}";
+
+    }
+
+    private void showPicture() {
+        String TAG_JSON = "Picture";
+        String TAG_USERID = "user_id";
+        String TAG_imagePath = "image_path";
+        String TAG_creattime = "create_time";
+        String TAG_x = "x_coordinate";
+        String TAG_y = "y_coordinate";
+        String TAG_hashtag = "hashtag";
+        String TAG_star = "starpoint";
+        String TAG_text = "text";
+
+        List<Marker> markers = new ArrayList<>();
+
+        try {
+            JSONObject jsonObject = new JSONObject(pictureJsonString);
+            JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject item = jsonArray.getJSONObject(i);
+
+                String user_id = item.getString(TAG_USERID);
+                String create_time = item.getString(TAG_creattime);
+                double x_coordinate = Double.parseDouble(item.getString(TAG_x));
+                double y_coordinate = Double.parseDouble(item.getString(TAG_y));
+                String starpoint = item.getString(TAG_star); // null 존재할 수도 있으므로 String으로 받음
+                String image_path = item.getString(TAG_imagePath);
+
+                // 마커 생성
+                Marker marker = new Marker();
+                LatLng current = new LatLng(x_coordinate, y_coordinate);
+
+                marker.setPosition(current);
+                marker.setIcon(MarkerIcons.BLACK);
+                marker.setCaptionText(create_time);
+
+                switch (starpoint) {
+                       case "5":
+                           marker.setIconTintColor(Color.BLUE);
+                           break;
+                       case "4":
+                           marker.setIconTintColor(Color.CYAN);
+                           break;
+                       case "3":
+                           marker.setIconTintColor(Color.GREEN);
+                           break;
+                       case "2":
+                           marker.setIconTintColor(Color.YELLOW);
+                           break;
+                       case "1":
+                           marker.setIconTintColor(Color.RED);
+                           break;
+                       default:
+                           // Default: GRAY
+                           marker.setIconTintColor(Color.GRAY);
+                           break;
+                }
+
+                markers.add(marker);
+            }
+
+            // 지도 위에 다중 마커 표시
+            for (Marker marker : markers) {
+                marker.setMap(naverMapObj);
+            }
+
+
+        } catch (JSONException e) {
+            Log.d("cobluelei", "showResult : ", e);
+        }
+
+    }
+
+    private void showRoute() {
+        String TAG_JSON = "Route";
+        String TAG_USERID = "user_id";
+        String TAG_creattime = "create_time";
+        String TAG_endtime = "end_time";
+        String TAG_routeInfo = "route_info";
+        String TAG_routeOrder = "route_order";
+        String TAG_routeId = "route_id";
+
+        int[] route_id_list = new int[1000];
+        List<LatLng> one_route = new ArrayList<>();
+        List<List<LatLng>> routes = new ArrayList<>();
+
+        // 경로 불러오기 실패
+        /*
+        try {
+
+            for (int x = 0; x < 1000; x++) {
+                JSONObject jsonObject = new JSONObject(routeJsonString);
+                JSONArray jsonArray = jsonObject.getJSONArray(TAG_JSON);
+
+                one_route = new ArrayList<>();
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject item = jsonArray.getJSONObject(i);
+
+                    String user_id = item.getString(TAG_USERID);
+
+                    JSONObject route_info = item.getJSONObject(TAG_routeInfo);
+                    double x_coordinate = Double.parseDouble(route_info.getString("x"));
+                    double y_coordinate = Double.parseDouble(route_info.getString("y"));
+
+                    int route_order = Integer.parseInt(item.getString(TAG_routeOrder));
+                    int route_id = Integer.parseInt(item.getString(TAG_routeId));
+
+                    for (int y = 0; y < 1000; y++) {
+                        if (route_id == x) {
+                            if (route_order == y) {
+                                one_route.add(y, new LatLng(x_coordinate, y_coordinate));
+                            }
+                        }
+                    }
+
+                    route_id_list[route_id] = route_id;
+                }
+                routes.add(x, one_route);
+            }
+
+            // 현재 저장되어 있는 경로의 수
+            int max_route_id = route_id_list[0];
+
+            for(int i = 0; i < route_id_list.length; i++) {
+                if(max_route_id < route_id_list[i]) {
+                    max_route_id = route_id_list[i];
+                }
+            }
+
+            for(int i = 0; i < routes.size(); i++) {
+                if (1 < routes.get(i).size()) {
+                    path.setCoords(routes.get(i));
+                    path.setOutlineWidth(0);
+                    path.setColor(Color.rgb(255, 160, 0));
+                    path.setMap(naverMapObj);
+                    // ready
+                }
+            }
+
+
+
+        } catch(JSONException e){
+                Log.d("cobluelei", "showResult : ", e);
+        }
+        */
     }
 
     @Override
@@ -117,6 +384,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
         naverMapObj = naverMap;
+
+        showPicture();
+        showRoute();
 
 /*        // Location of Location Button
         View locationButton = ((View) View.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
@@ -191,6 +461,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         path = new PathOverlay();
 
         coords = new ArrayList<>();
+        route_create_time = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss").format(new Date()); // 기록 시작 시간
+
         listner = location -> {
             r1 = location.getLatitude();
             r2 = location.getLongitude();
@@ -214,7 +486,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void StoprecordRoute(@NonNull NaverMap naverMap) {
 
         naverMap.removeOnLocationChangeListener(listner);
-
+        route_end_time = new SimpleDateFormat("yyyy:MM:dd hh:mm:ss").format(new Date()); // 기록 종료 시간
         Collections.addAll(coords,
                 new LatLng(r1, r2),
                 new LatLng(r1, r2)

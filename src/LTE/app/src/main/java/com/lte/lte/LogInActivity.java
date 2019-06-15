@@ -60,19 +60,22 @@ public class LogInActivity extends AppCompatActivity {
 
         cbAutoLogin = findViewById(R.id.cbAutoLogin);
 
-
+        // 지도 확인을 위해 잠시 주석 처리해 둠
+        /*
         if (isAutoLogin) {
             cbAutoLogin.setChecked(true);
             etUserID.setText(mSpUtil.getUserID());
             etPassword.setText(mSpUtil.getUserPW());
             etUserID.setEnabled(false);
             etPassword.setEnabled(false);
+            */
+            /*
             // 여기에 DB와 내용 비교해야 함
             dialog = ProgressDialog.show(LogInActivity.this, "",
                     "확인 중...", true);
             new Thread(this::login).start();
-        }
-
+            */
+     //   }
 
         // 회원가입 버튼 클릭
         btnRegist.setOnClickListener(new View.OnClickListener() {
@@ -94,17 +97,29 @@ public class LogInActivity extends AppCompatActivity {
 
         // 로그인 버튼 눌렀을 때
         btnLogin.setOnClickListener(new View.OnClickListener() {
-
+            /*
             private void run() {
                 login();
             }
-
+*/
             @Override
             public void onClick(View v) {
+
+                // 지도 체크를 위해 잠시 주석 처리 해 둠
+                /*
                 // 여기에 DB와 내용 비교해야 함
                 dialog = ProgressDialog.show(LogInActivity.this, "",
                         "확인 중...", true);
                 new Thread(this::run).start();
+                */
+
+                /* 이 아래 부분은 추후 없애야 함 (테스트 위해서 복붙해 놓음) */
+                // 로그인 내용 확인되면 Main Activity 호출
+                Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+                // 회원 ID를 Main Activity로 보내서 DB 정보 검색 Key 값으로 이용
+                intent.putExtra("UserID", String.valueOf(etUserID.getText()));
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -125,6 +140,8 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
+    // 지도 체크를 위해 잠시 주석 처리 해 둠
+    /*
     void login() {
         try {
             httpclient = new DefaultHttpClient();
@@ -176,5 +193,5 @@ public class LogInActivity extends AppCompatActivity {
                 mgr.getSchemeRegistry()), params);
         return client;
     }
-
+*/
 }
