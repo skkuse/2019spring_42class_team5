@@ -253,27 +253,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 marker.setPosition(current);
                 marker.setIcon(MarkerIcons.BLACK);
                 marker.setCaptionText(create_time);
+                marker.setCaptionRequestedWidth(250);
+                marker.setCaptionColor(Color.BLUE);
+                marker.setCaptionHaloColor(Color.rgb(200, 255, 200));
 
                 switch (starpoint) {
-                       case "5":
-                           marker.setIconTintColor(Color.BLUE);
-                           break;
-                       case "4":
-                           marker.setIconTintColor(Color.CYAN);
-                           break;
-                       case "3":
-                           marker.setIconTintColor(Color.GREEN);
-                           break;
-                       case "2":
-                           marker.setIconTintColor(Color.YELLOW);
-                           break;
-                       case "1":
-                           marker.setIconTintColor(Color.RED);
-                           break;
-                       default:
-                           // Default: GRAY
-                           marker.setIconTintColor(Color.GRAY);
-                           break;
+                    case "5":
+                    case "4.5":
+                        marker.setIconTintColor(Color.BLUE);
+                        break;
+                    case "4":
+                    case "3.5":
+                        marker.setIconTintColor(Color.rgb(102, 204, 255));
+                        break;
+                    case "3":
+                    case "2.5":
+                        marker.setIconTintColor(Color.GREEN);
+                        break;
+                    case "2":
+                    case "1.5":
+                        marker.setIconTintColor(Color.YELLOW);
+                        break;
+                    case "1":
+                    case "0.5":
+                        marker.setIconTintColor(Color.rgb(255, 111, 97));
+                        break;
+                    default:
+                        // Default: GRAY
+                        marker.setIconTintColor(Color.GRAY);
+                        break;
                 }
 
                 markers.add(marker);
