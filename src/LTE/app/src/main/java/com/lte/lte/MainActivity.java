@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab3.setOnClickListener(this);
 
         fab1.setLabelText("경로 저장");
-
+        // FusedLocationSource 생성
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
-
+        // Set the map
         MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
@@ -373,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         */
     }
-
+    // onRequestPermissionResult() in FusedLocationSource calls the result (위치반환 구현체에 결과 전달)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
-
+        // 위치추적 기능
         naverMap.setLocationSource(locationSource);
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
@@ -395,18 +395,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         showPicture();
         showRoute();
-
-/*        // Location of Location Button
-        View locationButton = ((View) View.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)
-                locationButton.getLayoutParams();
-        // position on right bottom
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
-        layoutParams.setMargins(0, 0, 30, 30);
-*/
-
-//        recordRoute(naverMap);
 
     }
 
@@ -463,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
+    // 경로 기록 시작
     public void recordRoute(@NonNull NaverMap naverMap) {
         // operate
         path = new PathOverlay();
@@ -490,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //end of code
     }
-
+    // 경로 기록 종료
     public void StoprecordRoute(@NonNull NaverMap naverMap) {
 
         naverMap.removeOnLocationChangeListener(listner);
@@ -504,7 +492,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             path.setOutlineWidth(0);
             path.setColor(Color.rgb(255, 160, 0));
             path.setMap(naverMap);
-            // ready
         }
     }
 
