@@ -23,6 +23,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
+// 회원가입 입력 정보 받는 페이지
+// 작성자 : 신아름
+// 유저 DB에 회원가입 정보 입력 작성자 : 김준형
+
 public class SignupPage extends Activity {
 
     private EditText etUserName; // User Name
@@ -52,6 +56,7 @@ public class SignupPage extends Activity {
         btnCancel = findViewById(R.id.btnCancel);
 
         // 비밀번호 일치 검사
+        // 작성자 : 김준형
         etPasswordConfirm.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -152,6 +157,8 @@ public class SignupPage extends Activity {
 
     }
 
+    // DB에 내용 저장
+    // 작성자 : 김준형
     public void insert() {
         String UserName = etUserName.getText().toString();
         String UserID = etUserID.getText().toString();

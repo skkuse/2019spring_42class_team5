@@ -28,6 +28,11 @@ import org.apache.http.params.HttpParams;
 import java.util.ArrayList;
 import java.util.List;
 
+// 로그인 시스템 담당 : 신아름, 주유흠, 이금택
+// 로그인 코드 작성자 : 신아름
+// 자동 로그인 작성자 : 배경률
+// 유저 DB와의 연결 및 DB 내용과 입력값 일치 여부 확인 작성자 : 김준형
+
 public class LogInActivity extends AppCompatActivity {
     private SharedManagerUtil mSpUtil;
     private Boolean isAutoLogin;
@@ -60,22 +65,19 @@ public class LogInActivity extends AppCompatActivity {
 
         cbAutoLogin = findViewById(R.id.cbAutoLogin);
 
-        // 지도 확인을 위해 잠시 주석 처리해 둠
-        /*
+
         if (isAutoLogin) {
             cbAutoLogin.setChecked(true);
             etUserID.setText(mSpUtil.getUserID());
             etPassword.setText(mSpUtil.getUserPW());
             etUserID.setEnabled(false);
             etPassword.setEnabled(false);
-            */
-            /*
-            // 여기에 DB와 내용 비교해야 함
+
+            // DB와 내용 비교하여 일치 여부 판단
             dialog = ProgressDialog.show(LogInActivity.this, "",
                     "확인 중...", true);
             new Thread(this::login).start();
-            */
-     //   }
+        }
 
         // 회원가입 버튼 클릭
         btnRegist.setOnClickListener(new View.OnClickListener() {
@@ -83,43 +85,30 @@ public class LogInActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 회원가입 페이지 오픈
                 Intent intent = new Intent(getApplicationContext(), SignupPage.class);
-
-                // SINGLE_TOP : 이미 만들어진게 있으면 그걸 쓰고, 없으면 만들어서 써라
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                // intent를 보내면서 다음 액티비티로부터 데이터를 받기 위해 식별번호(1000)을 준다.
+                // 다음 액티비티로부터 데이터를 받기 위해 1000을 넘김
                 startActivityForResult(intent, 1000);
             }
-
 
         });
 
 
         // 로그인 버튼 눌렀을 때
         btnLogin.setOnClickListener(new View.OnClickListener() {
-            /*
+
             private void run() {
                 login();
             }
-*/
+
             @Override
             public void onClick(View v) {
 
-                // 지도 체크를 위해 잠시 주석 처리 해 둠
-                /*
-                // 여기에 DB와 내용 비교해야 함
+                // DB와 내용 일치 여부 확인
                 dialog = ProgressDialog.show(LogInActivity.this, "",
                         "확인 중...", true);
                 new Thread(this::run).start();
-                */
 
-                /* 이 아래 부분은 추후 없애야 함 (테스트 위해서 복붙해 놓음) */
-                // 로그인 내용 확인되면 Main Activity 호출
-                Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-                // 회원 ID를 Main Activity로 보내서 DB 정보 검색 Key 값으로 이용
-                intent.putExtra("UserID", String.valueOf(etUserID.getText()));
-                startActivity(intent);
-                finish();
             }
         });
 
@@ -140,8 +129,8 @@ public class LogInActivity extends AppCompatActivity {
         }
     }
 
-    // 지도 체크를 위해 잠시 주석 처리 해 둠
-    /*
+    // 로그인 입력 정보와 DB 내용 비교
+    // 작성자 : 김준형
     void login() {
         try {
             httpclient = new DefaultHttpClient();
@@ -193,5 +182,5 @@ public class LogInActivity extends AppCompatActivity {
                 mgr.getSchemeRegistry()), params);
         return client;
     }
-*/
+
 }

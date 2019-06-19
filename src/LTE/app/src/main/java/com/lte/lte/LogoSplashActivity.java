@@ -5,6 +5,9 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+// 앱 첫 실행 시, 앱 로고 화면 3초 간 등장
+// 작성자 : 신아름
+
 public class LogoSplashActivity extends AppCompatActivity {
 
     @Override

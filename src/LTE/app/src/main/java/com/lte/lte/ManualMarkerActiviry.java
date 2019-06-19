@@ -16,6 +16,10 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.util.MarkerIcons;
 
+// 사진 등록 시스템 담당 : 배경률
+// 사진 등록 중 위치 정보 없는 사진의 경우, 사용자가 임의로 위치 정보 입력 가능
+// 작성자 : 배경률
+
 public class ManualMarkerActiviry extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;

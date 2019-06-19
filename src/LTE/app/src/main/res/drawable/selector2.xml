@@ -2,6 +2,11 @@
 <selector
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--
+    버튼 클릭 시 색상 변화
+    작성자 : 신아름
+     -->
+
     <item android:state_pressed="true" >
         <shape>
             <gradient

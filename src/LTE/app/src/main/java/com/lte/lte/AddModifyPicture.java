@@ -65,7 +65,9 @@ import java.util.Map;
 
 import me.gujun.android.taggroup.TagGroup;
 
-//Uploading and modifying Pictures
+// Uploading and modifying Pictures
+// 사진 등록 시스템 담당 작성자 : 배경률
+// 사진 DB와 연결 부분 작성자 : 김준형
 
 public class AddModifyPicture extends AppCompatActivity implements View.OnClickListener {
     private SharedManagerUtil mSpUtil;
@@ -237,7 +239,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
+    // 갤러리에서 사진 고르기
     public void startGalleryChooser() {
         if (PermissionUtils.requestPermission(this, GALLERY_PERMISSIONS_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Intent intent = new Intent(Intent.ACTION_PICK);
@@ -313,7 +315,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
+    // Google Cloud Vision API 사용
     private Vision.Images.Annotate prepareAnnotationRequest(Bitmap bitmap) throws IOException {
         HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
@@ -381,7 +383,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         return annotateRequest;
     }
 
-
+    // 이미지 분석을 통한 라벨 탐지 -> 이후 해시태그 추천으로 사용
     private static class LableDetectionTask extends AsyncTask<Object, Void, String> {
         private final WeakReference<AddModifyPicture> mActivityWeakReference;
         private Vision.Images.Annotate mRequest;
@@ -504,6 +506,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
 
     }
 
+    // 사진에서 위치 정보 불러오기
     private static LatLng getLocation() throws IOException {
         String lat = ExifInterface.TAG_GPS_LATITUDE;
         String lot = ExifInterface.TAG_GPS_LONGITUDE;
@@ -526,6 +529,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         return null;
     }
 
+    // 사진에서 만든 시간 가져오기
     private static String getTime() throws IOException, ParseException {
         String dat = ExifInterface.TAG_DATETIME;
         String datetime = "";
@@ -568,6 +572,8 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         return Base64.encodeToString(arr, Base64.DEFAULT);
     }
 
+    // 사진 DB에 데이터 저장
+    // 작성자 : 김준형
     private void insertToDatabase(String UserID, ArrayList<bitmaps> bitmap, float starpoint, String[] Hashtags, String Comment, String date, double lat, double lot) throws UnsupportedEncodingException {
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;//private added

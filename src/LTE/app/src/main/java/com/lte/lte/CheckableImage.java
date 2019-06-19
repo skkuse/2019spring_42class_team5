@@ -6,6 +6,9 @@ import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.RelativeLayout;
 
+// 사진 등록 시스템 중 이미지 선택
+// 작성자 : 배경률
+
 public class CheckableImage extends RelativeLayout implements Checkable {
     public CheckableImage(Context context, AttributeSet attrs) {
         super(context, attrs);

@@ -10,6 +10,9 @@ import com.gun0912.tedpermission.TedPermission;
 
 import java.util.List;
 
+// 처음 앱 실행 시, 위치 정보 권한 획득 필요함을 알려 줌
+// 작성자 : 배경률
+
 public class SplashActivity extends AppCompatActivity {
     public static final int ACTIVITY_RESULT_LOGIN = 2;
     private SharedManagerUtil mSpUtil;
@@ -35,9 +38,6 @@ public class SplashActivity extends AppCompatActivity {
                 Intent intent=  new Intent(getApplicationContext(), LogInActivity.class);
                 startActivity(intent);
                 finish();
-
-//        Intent intent= new Intent(this, LogInActivity.class);
-//        startActivityForResult(intent,ACTIVITY_RESULT_LOGIN);
 
             }
 

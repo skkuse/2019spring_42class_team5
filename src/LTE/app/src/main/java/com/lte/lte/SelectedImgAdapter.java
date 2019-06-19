@@ -13,6 +13,9 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
+// 사진 등록 시 이미지 선택
+// 작성자 : 배경률
+
 public class SelectedImgAdapter extends BaseAdapter {
     private final Context mContext;
     private final ArrayList<Bitmap> mBitmaps;

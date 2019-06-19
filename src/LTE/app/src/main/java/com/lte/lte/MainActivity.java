@@ -43,6 +43,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+// 지도 시스템 담당 : 천수현
+// 지도 관련 코드 전체 작성자 : 천수현
+// 경로 기록 함수 일부 수정 및 작성 : 배경률
+// DB에서 불러 온 JSON 표시하는 함수 작성자 : 신아름
+// DB와 연결하는 함수 작성자 : 김준형
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
     private SharedManagerUtil mSpUtil;
 
@@ -164,61 +170,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 "]" +
                 "}";
 
-        routeJsonString = "{" +
-                "\"Route\" : [" +
-                "{" +
-                "\"user_id\" : \"test\"," +
-                "\"create_time\" : \"2019-06-15 08:28\"," +
-                "\"end_time\" : \"2019-06-15 09:28\"," +
-                "\"route_info\" : { \"x\" : \"37.566535\", \"y\" : \"126.977969\"}," +
-                "\"route_order\" : \"0\"," +
-                "\"route_id\" : \"1\"" +
-                "}," +
-                "{" +
-                "\"user_id\" : \"test\"," +
-                "\"create_time\" : \"2019-06-15 08:28\"," +
-                "\"end_time\" : \"2019-06-15 09:28\"," +
-                "\"route_info\" : { \"x\" : \"37.5666\", \"y\" : \"126.978\"}," +
-                "\"route_order\" : \"1\"," +
-                "\"route_id\" : \"1\"" +
-                "}," +
-                "{" +
-                "\"user_id\" : \"test\"," +
-                "\"create_time\" : \"2019-06-15 08:28\"," +
-                "\"end_time\" : \"2019-06-15 09:28\"," +
-                "\"route_info\" : {\"x\" : \"37.566\", \"y\" : \"126.979\"}," +
-                "\"route_order\" : \"2\"," +
-                "\"route_id\" : \"1\"" +
-                "}," +
-                "{" +
-                "\"user_id\" : \"test\"," +
-                "\"create_time\" : \"2019-06-15 08:41\"," +
-                "\"end_time\" : \"2019-06-15 09:28\"," +
-                "\"route_info\" : {\"x\" : \"37.56\", \"y\" : \"126.97\"}," +
-                "\"route_order\" : \"0\"," +
-                "\"route_id\" : \"2\"" +
-                "}," +
-                "{" +
-                "\"user_id\" : \"test\"," +
-                "\"create_time\" : \"2019-06-15 08:41\"," +
-                "\"end_time\" : \"2019-06-15 09:28\"," +
-                "\"route_info\" : { \"x\" : \"37.55\", \"y\" : \"126.97\"}," +
-                "\"route_order\" : \"1\"," +
-                "\"route_id\" : \"2\"" +
-                "}," +
-                "{" +
-                "\"user_id\" : \"test\"," +
-                "\"create_time\" : \"2019-06-15 08:41\"," +
-                "\"end_time\" : \"2019-06-15 09:28\"," +
-                "\"route_info\" : { \"x\" : \"37.54\", \"y\" : \"126.9\"}," +
-                "\"route_order\" : \"2\"," +
-                "\"route_id\" : \"2\"" +
-                "}" +
-                "]" +
-                "}";
-
     }
 
+    // 작성자 : 신아름
+    // 사진 DB에서 JSON으로 읽어 온 정보 지도 위에 다중 마커로 표시하기
     private void showPicture() {
         String TAG_JSON = "Picture";
         String TAG_USERID = "user_id";
@@ -257,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 marker.setCaptionColor(Color.BLUE);
                 marker.setCaptionHaloColor(Color.rgb(200, 255, 200));
 
+                // 별점에 따라 마커 색 변경
                 switch (starpoint) {
                     case "5":
                     case "4.5":
@@ -299,6 +255,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // 작성자 : 신아름
+    // 경로 DB에서 데이터 로드해서 지도 위에 보여주는 함수
+    // 구현 실패
     private void showRoute() {
         String TAG_JSON = "Route";
         String TAG_USERID = "user_id";
@@ -366,13 +325,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
 
-
-
         } catch(JSONException e){
                 Log.d("cobluelei", "showResult : ", e);
         }
         */
     }
+
     // onRequestPermissionResult() in FusedLocationSource calls the result (위치반환 구현체에 결과 전달)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -478,6 +436,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //end of code
     }
+
     // 경로 기록 종료
     public void StoprecordRoute(@NonNull NaverMap naverMap) {
 
@@ -496,6 +455,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    // 작성자 : 김준형
+    // DB에 데이터를 저장하는 함수
     private void insertToDatabase(String UserID, String date, double lat, double lot) throws UnsupportedEncodingException {
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;//private added
