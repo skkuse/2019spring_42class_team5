@@ -478,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
 
 
-                    String link = "http://" + mSpUtil.getServeriP() + "//image.php";
+                    String link = "http://"+mSpUtil.getServeriP()+"/image.php";
 
 
                     URL url = new URL(link);

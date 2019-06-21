@@ -294,6 +294,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         } else if (requestCode == LOCATION_REQUEST && resultCode == RESULT_OK) {
             try {
                 insertToDatabase("kjhbabo", originalBitmaps, starpoint, tags, comment, getTime(), data.getDoubleExtra("latitude", 0), data.getDoubleExtra("longitude", 0));
+                finish();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ParseException e) {
@@ -597,7 +598,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
                 try {
 
 
-                    String link = "http://"+mSpUtil.getServeriP()+"//image.php";
+                    String link = "http://"+ mSpUtil.getServeriP() +"/image.php";
 
 
                     URL url = new URL(link);

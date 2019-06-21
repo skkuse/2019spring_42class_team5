@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:icon="@drawable/lte_logo"
         android:label="@string/app_name"
@@ -22,6 +23,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".LogInActivity" />
         <activity android:name=".SignupPage" />
+        <activity android:name=".ManualMarkerActiviry"></activity>
         <activity
             android:name=".LogoSplashActivity"
             android:theme="@style/SplashTheme">
