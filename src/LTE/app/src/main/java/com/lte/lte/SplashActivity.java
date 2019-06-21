@@ -23,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         mSpUtil = SharedManagerUtil.getInstance(SplashActivity.this);
-        mSpUtil.setServerIP("115.145.244.49");
+        mSpUtil.setServerIP("115.145.226.15");
 
         tedPermission();
     }

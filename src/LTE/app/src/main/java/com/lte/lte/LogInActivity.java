@@ -134,7 +134,7 @@ public class LogInActivity extends AppCompatActivity {
     void login() {
         try {
             httpclient = new DefaultHttpClient();
-            httppost = new HttpPost("http://"+mSpUtil.getServeriP()+"/signup.php");
+            httppost = new HttpPost("http://115.145.226.15/signup.php");
             nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("UserID", etUserID.getText().toString()));
             nameValuePairs.add(new BasicNameValuePair("Password", etPassword.getText().toString()));

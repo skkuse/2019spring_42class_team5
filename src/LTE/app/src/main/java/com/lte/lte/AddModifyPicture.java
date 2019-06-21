@@ -168,6 +168,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
         numDone = 0;
         topLabels = new String[NUM_LABELS];
 
+        // 갤러리에서 선택한 사진들의 목록 중 사진을 다시 클릭하면 크게 원본으로 보여 줌
         grSelected.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             if (!isModifying) {
                 mZoomImage.setImageBitmap(originalBitmaps.get(position).getBitmap());
@@ -177,6 +178,8 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
             }
 
         });
+
+        // 갤러리에서 선택한 사진을 길게 누르면 수정 모드 진입 --> 업로드하려고 선택한 사진들 삭제 가능
         grSelected.setOnItemLongClickListener((parent, view, position, id) -> {
             isModifying = true;
             btnDelete.setVisibility(View.VISIBLE);
@@ -598,7 +601,7 @@ public class AddModifyPicture extends AppCompatActivity implements View.OnClickL
                 try {
 
 
-                    String link = "http://"+ mSpUtil.getServeriP() +"/image.php";
+                    String link = "http://115.145.226.15/image.php";
 
 
                     URL url = new URL(link);

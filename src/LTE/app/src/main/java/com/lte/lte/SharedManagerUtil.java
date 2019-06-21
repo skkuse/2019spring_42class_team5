@@ -3,6 +3,9 @@ package com.lte.lte;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+// 자동 로그인을 위한 SharedPreferance
+// 작성자 : 배경률
+
 public class SharedManagerUtil {
     private SharedPreferences.Editor editor;
     private SharedPreferences sp;

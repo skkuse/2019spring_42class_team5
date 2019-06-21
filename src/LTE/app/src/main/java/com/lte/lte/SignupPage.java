@@ -198,7 +198,7 @@ public class SignupPage extends Activity {
                     String PhoneNum = params[3];
                     String NickName = params[4];
 
-                    String link = "http://"+mSpUtil.getServeriP()+"/login.php";
+                    String link = "http://115.145.226.15/login.php";
                     String data = URLEncoder.encode("UserName", "UTF-8") + "=" + URLEncoder.encode(UserName, "UTF-8");
                     data += "&" + URLEncoder.encode("UserID", "UTF-8") + "=" + URLEncoder.encode(UserID, "UTF-8");
                     data += "&" + URLEncoder.encode("Password", "UTF-8") + "=" + URLEncoder.encode(Password, "UTF-8");
